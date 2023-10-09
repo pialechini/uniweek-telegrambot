@@ -1,10 +1,10 @@
-import bot from '../../create-bot';
-import sampleGolestanSchedule from '../week-schedule/sample-golestan-schedule';
-import supabase from '../../supabase';
-import { CommandContext, Context, InlineKeyboard } from 'grammy';
-import { constructWeekSchedule } from '../../lib/golestan';
-import { decode } from '../../lib/json-utils';
-import { makeCredentialsWith, signIn } from '../../features/auth/auth';
+import bot from "../../create-bot";
+import sampleGolestanSchedule from "../week-schedule/sample-golestan-schedule";
+import supabase from "../../supabase";
+import { CommandContext, Context, InlineKeyboard } from "grammy";
+import { constructWeekSchedule } from "../../lib/golestan";
+import { decode, encode } from "../../lib/json-utils";
+import { makeCredentialsWith, signIn } from "../../features/auth/auth";
 
 async function setWeekSchedule(ctx: CommandContext<Context>) {
   const golestanEncodedString = ctx.message!.text.split(" ")[1];
@@ -47,11 +47,11 @@ async function setWeekSchedule(ctx: CommandContext<Context>) {
 }
 
 async function showWeekSchedule(ctx: CommandContext<Context>) {
-  const credentials = JSON.stringify(makeCredentialsWith(ctx.from?.id!));
+  const credentials = encode(makeCredentialsWith(ctx.from?.id!));
 
   ctx.reply("خدمت شما :)", {
     reply_markup: new InlineKeyboard().webApp(
-      "نمایش",
+      "نمایش اپ",
       `https://pialechini.github.io/uniweek-miniapp/#/week-schedule?credentials=${credentials}`
     ),
   });

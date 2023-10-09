@@ -1,10 +1,26 @@
 import bot from "../../create-bot";
 import sampleGolestanSchedule from "../week-schedule/sample-golestan-schedule";
 import supabase from "../../supabase";
-import { CommandContext, Context, InlineKeyboard } from "grammy";
+import {
+  CallbackQueryContext,
+  CommandContext,
+  Context,
+  InlineKeyboard,
+} from "grammy";
 import { constructWeekSchedule } from "../../lib/golestan";
 import { decode, encode } from "../../lib/json-utils";
 import { makeCredentialsWith, signIn } from "../../features/auth/auth";
+
+function constructCredentials(senderId: number) {
+  return encode(makeCredentialsWith(senderId));
+}
+
+function constructMiniAppLink(senderId: number) {
+  return (
+    "https://pialechini.github.io/uniweek-miniapp/#/week-schedule?credentials=" +
+    constructCredentials(senderId)
+  );
+}
 
 async function setWeekSchedule(ctx: CommandContext<Context>) {
   const golestanEncodedString = ctx.message!.text.split(" ")[1];
@@ -47,15 +63,27 @@ async function setWeekSchedule(ctx: CommandContext<Context>) {
 }
 
 async function showWeekSchedule(ctx: CommandContext<Context>) {
-  const credentials = encode(makeCredentialsWith(ctx.from?.id!));
+  ctx.reply("انتخاب کنین", {
+    reply_markup: new InlineKeyboard()
+      .webApp("وب اپ رو باز کن", constructMiniAppLink(ctx.from?.id!))
+      .text("لینک رو بده", "giveWebappLink"),
+  });
+}
 
-  ctx.reply("خدمت شما :)", {
-    reply_markup: new InlineKeyboard().webApp(
-      "نمایش اپ",
-      `https://pialechini.github.io/uniweek-miniapp/#/week-schedule?credentials=${credentials}`
-    ),
+async function handleGiveWebappLink(ctx: CallbackQueryContext<Context>) {
+  bot.api.editMessageText(
+    ctx.chat?.id!,
+    ctx.callbackQuery.message?.message_id!,
+    constructMiniAppLink(ctx.from?.id!)
+  );
+
+  ctx.answerCallbackQuery({
+    text: "با استفاده از این لینک که در مرورگر شما باز میشه می تونین این اپ رو به صفحه خانگیتون برای دسترسی سریعتر اضافه کنین",
+    cache_time: 60,
+    show_alert: true,
   });
 }
 
 bot.command("set", setWeekSchedule);
 bot.command("week", showWeekSchedule);
+bot.callbackQuery("giveWebappLink", handleGiveWebappLink);

@@ -1,4 +1,4 @@
-import sampleGolestanSchedule from '../features/week-schedule/sample-golestan-schedule';
+import sampleGolestanSchedule from "../features/week-schedule/sample-golestan-schedule";
 
 function initializeEmptyWeekSchedule(): WeekSchedule {
   return Array.from({ length: 5 }, () =>
@@ -7,14 +7,16 @@ function initializeEmptyWeekSchedule(): WeekSchedule {
 }
 
 function convertTimePeriodToClassIndex(timePeriod: string) {
+  console.log(timePeriod);
+
   switch (timePeriod) {
-    case "08:00-10:00":
+    case "۰۸:۰۰-۱۰:۰۰":
       return 0;
-    case "10:00-12:00":
+    case "۱۰:۰۰-۱۲:۰۰":
       return 1;
-    case "14:00-16:00":
+    case "۱۴:۰۰-۱۶:۰۰":
       return 2;
-    case "16:00-18:00":
+    case "۱۶:۰۰-۱۸:۰۰":
       return 3;
   }
 }
@@ -53,6 +55,8 @@ export function constructWeekSchedule(
       }
     }
   }
+
+  console.log(weekSchedule);
 
   return weekSchedule;
 }

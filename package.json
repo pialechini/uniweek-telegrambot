@@ -2,7 +2,8 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/bot.js",
-    "dev": "env-cmd ts-node-dev src/bot.ts"
+    "dev": "env-cmd ts-node-dev src/bot.ts",
+    "prettier": "prettier 'src/**/*.ts' --write"
   },
   "devDependencies": {
     "@tsconfig/node16": "^16.1.1",

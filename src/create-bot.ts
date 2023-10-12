@@ -1,4 +1,4 @@
-import { Bot } from 'grammy';
+import { Bot } from "grammy";
 
 const bot = new Bot(process.env.TELEGRAM_TOKEN || "");
 

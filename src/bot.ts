@@ -1,8 +1,8 @@
-import * as express from 'express';
-import bot from './create-bot';
-import { webhookCallback } from 'grammy';
-import './features/week-schedule/index';
-import './commands';
+import * as express from "express";
+import bot from "./create-bot";
+import { webhookCallback } from "grammy";
+import "./features/week-schedule/index";
+import "./commands";
 
 bot.api.setMyCommands([
   { command: "week", description: "برنامه هفتگی" },

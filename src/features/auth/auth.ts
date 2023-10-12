@@ -1,5 +1,5 @@
-import supabase from '../../supabase';
-import { sha256 } from 'js-sha256';
+import supabase from "../../supabase";
+import { sha256 } from "js-sha256";
 
 export function makeCredentialsWith(senderId: number) {
   const token = sha256(`wer3489${senderId}@..sf.s.cxv`);
@@ -12,7 +12,7 @@ export function makeCredentialsWith(senderId: number) {
 
 export async function signIn(senderId: number, username?: string) {
   const { data, error } = await supabase.auth.signInWithPassword(
-    makeCredentialsWith(senderId)
+    makeCredentialsWith(senderId),
   );
 
   // Invalid login credentials

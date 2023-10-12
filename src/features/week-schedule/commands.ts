@@ -26,13 +26,13 @@ async function setWeekSchedule(ctx: CommandContext<Context>) {
   const golestanEncodedString = ctx.message!.text.split(" ")[1];
 
   if (Boolean(golestanEncodedString) !== true) {
-    ctx.reply(`شکل صحیح دستور:\n/set <string>`);
+    ctx.reply("شکل صحیح دستور:\n/set <string>");
     return;
   }
 
   try {
     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
-      golestanEncodedString
+      golestanEncodedString,
     );
     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
@@ -47,7 +47,7 @@ async function setWeekSchedule(ctx: CommandContext<Context>) {
       },
       {
         onConflict: "user_id",
-      }
+      },
     );
 
     if (status === 201) {
@@ -74,7 +74,7 @@ async function handleGiveWebappLink(ctx: CallbackQueryContext<Context>) {
   bot.api.editMessageText(
     ctx.chat?.id!,
     ctx.callbackQuery.message?.message_id!,
-    constructMiniAppLink(ctx.from?.id!)
+    constructMiniAppLink(ctx.from?.id!),
   );
 
   ctx.answerCallbackQuery({

@@ -4,11 +4,17 @@
     "outDir": "dist",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": [
+        "src/*"
+      ]
     },
     "strict": true
   },
-
-  "include": ["src/**/*.ts", "environment.d.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src/**/*.ts",
+    "environment.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

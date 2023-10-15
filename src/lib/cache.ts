@@ -1,4 +1,6 @@
-import cacheDriver from "@/cache";
+import NodeCache from "node-cache";
+
+const cacheDriver = new NodeCache();
 
 export class CacheFor<T> {
   constructor(public scope: string) {

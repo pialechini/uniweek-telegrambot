@@ -5,7 +5,6 @@ import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
 import { signIn } from "../auth/auth";
-import * as types from "../../types/types";
 import cache from "../../cache";
 
 // async function fetchOperationMode(senderId: number) {
@@ -95,4 +94,4 @@ async function handleFinish(ctx: Context) {
 
 bot.command("set", handleSetCommand);
 bot.on("message:text", handleGolestanEncodedString);
-// bot.on("message:text", handleFinish);
+bot.on("message:text", handleFinish);

@@ -11,9 +11,7 @@ bot.api.setMyCommands([
   { command: "help", description: "راهنمای جامع" },
 ]);
 
-// Start the server
 if (process.env.NODE_ENV === "production") {
-  // Use Webhooks for the production server
   const app = express.default();
   app.use(express.json());
   app.use(webhookCallback(bot, "express"));
@@ -23,6 +21,5 @@ if (process.env.NODE_ENV === "production") {
     console.log(`Bot listening on port ${PORT}`);
   });
 } else {
-  // Use Long Polling for development
   bot.start();
 }

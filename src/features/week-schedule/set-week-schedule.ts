@@ -44,7 +44,6 @@ async function handleGolestanEncodedString(ctx: Context) {
 
   const payload = cache.get(`user${ctx.from?.id}`) as any;
   console.log(`cache payload: ${payload.golestanEncodedString}`);
-  
 
   if (!payload?.golestanEncodedString) {
     return;
@@ -55,12 +54,12 @@ async function handleGolestanEncodedString(ctx: Context) {
   });
 }
 
-async function handleFinish(ctx: Context) {
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
+// async function handleFinish(ctx: Context) {
+//   const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-  if (!payload?.golestanEncodedString) {
-    return;
-  }
+//   if (!payload?.golestanEncodedString) {
+//     return;
+//   }
 
 //   try {
 //     const golestanSchedule = decode<typeof sampleGolestanSchedule>(

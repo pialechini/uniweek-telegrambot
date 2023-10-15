@@ -34,31 +34,33 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 30);
 }
 
-// async function handleGolestanEncodedString(ctx: Context) {
-//   // const operation_mode = await fetchOperationMode(ctx.from?.id!);
+async function handleGolestanEncodedString(ctx: Context) {
+  // const operation_mode = await fetchOperationMode(ctx.from?.id!);
 
-//   // if (
-//   // operation_mode.state === "waiting for golestan encoded string from user"
-//   // ) {
-//   // }
+  // if (
+  // operation_mode.state === "waiting for golestan encoded string from user"
+  // ) {
+  // }
 
-//   const payload = cache.get(`user${ctx.from?.id}`) as any;
+  const payload = cache.get(`user${ctx.from?.id}`) as any;
+  console.log(`cache payload: ${payload.golestanEncodedString}`);
+  
 
-//   if (!payload?.golestanEncodedString) {
-//     return;
-//   }
+  if (!payload?.golestanEncodedString) {
+    return;
+  }
 
-//   cache.set(`user${ctx.from?.id}`, {
-//     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
-//   });
-// }
+  cache.set(`user${ctx.from?.id}`, {
+    golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
+  });
+}
 
-// async function handleFinish(ctx: Context) {
-//   const payload = cache.get(`user${ctx.from?.id}`) as any;
+async function handleFinish(ctx: Context) {
+  const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-//   if (!payload?.golestanEncodedString) {
-//     return;
-//   }
+  if (!payload?.golestanEncodedString) {
+    return;
+  }
 
 //   try {
 //     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
@@ -93,5 +95,5 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
 // }
 
 bot.command("set", handleSetCommand);
-// bot.on("message:text", handleGolestanEncodedString);
+bot.on("message", handleGolestanEncodedString);
 // bot.on("message:text", handleFinish);

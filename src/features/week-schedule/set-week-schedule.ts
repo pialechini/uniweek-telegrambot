@@ -39,17 +39,10 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
 }
 
 async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
-  // const operation_mode = await fetchOperationMode(ctx.from?.id!);
-
-  // if (
-  // operation_mode.state === "waiting for golestan encoded string from user"
-  // ) {
-  // }
-
   const payload = cache.get(`user${ctx.from?.id}`) as any;
   console.log(payload);
 
-  if (!payload?.golestanEncodedString) {
+  if (payload?.golestanEncodedString === undefined) {
     await next();
     return;
   }
@@ -64,7 +57,10 @@ async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
 async function handleFinish(ctx: Context, next: NextFunction) {
   const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-  if (!payload?.golestanEncodedString) {
+  if (
+    ctx.message?.text !== "ارسال" ||
+    payload?.golestanEncodedString === undefined
+  ) {
     await next();
     return;
   }
@@ -102,5 +98,5 @@ async function handleFinish(ctx: Context, next: NextFunction) {
 }
 
 bot.command("set", handleSetCommand);
-bot.on("message:text", handleGolestanEncodedString);
 bot.on("message:text", handleFinish);
+bot.on("message:text", handleGolestanEncodedString);

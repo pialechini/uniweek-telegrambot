@@ -43,11 +43,12 @@ async function handleGolestanEncodedString(ctx: Context) {
   // }
 
   const payload = cache.get(`user${ctx.from?.id}`) as any;
-  console.log(`cache payload: ${payload.golestanEncodedString}`);
 
   if (!payload?.golestanEncodedString) {
     return;
   }
+
+  console.log(`cache payload: ${payload.golestanEncodedString}`);
 
   cache.set(`user${ctx.from?.id}`, {
     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,

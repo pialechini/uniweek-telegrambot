@@ -24,7 +24,7 @@ export async function singUp(senderId: number, username?: string) {
     ...makeCredentialsWith(senderId),
   });
 
-  const { data } = await supabase
+  const { data, status } = await supabase
     .from("identities")
     .upsert(
       { telegram_username: username },
@@ -33,6 +33,8 @@ export async function singUp(senderId: number, username?: string) {
       }
     )
     .select();
+
+  console.log(JSON.stringify(signupResult), data, status);
 
   return signupResult.user;
 }

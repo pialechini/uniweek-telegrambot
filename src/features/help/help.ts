@@ -16,5 +16,12 @@ const golestanPayload =
 
 bot.command("help", async (ctx) => {
   await ctx.reply(helpForSettingWeekSchedule);
+  await bot.api.sendVideo(
+    ctx.chat.id,
+    "BAACAgQAAxkBAAIDFmUr8W2e9DG92TnKYNL0_qxInlNeAALyEAACT1FgUeDK6u_Z2D2rMAQ",
+    {
+      caption: "همین حرفای بالا ولی تصویری :)",
+    }
+  );
   await ctx.reply(golestanPayload, { parse_mode: "Markdown" });
 });

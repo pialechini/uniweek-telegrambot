@@ -17,9 +17,9 @@ bot.command("start", async (ctx: CommandContext<Context>) => {
     )
     .select();
 
-  console.log(JSON.stringify(data), status);
-
   if (user) {
     ctx.reply("ساخت حساب کاربری موفقیت آمیز بود");
   }
+
+  await ctx.reply("به به! خوش آمدید");
 });

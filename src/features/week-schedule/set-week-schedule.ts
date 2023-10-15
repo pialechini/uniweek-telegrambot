@@ -36,6 +36,7 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     const golestanPayload = decode<typeof sampleGolestanSchedule>(
       golestanEncodedString
     );
+
     const evenWeekSchedule = constructWeekSchedule(
       "even",
       golestanPayload.schedule
@@ -44,6 +45,7 @@ async function handleFinish(ctx: Context, next: NextFunction) {
       "odd",
       golestanPayload.schedule
     );
+
     cache.forget(ctx.from?.id!);
 
     await signIn(ctx.from?.id!);
@@ -58,20 +60,17 @@ async function handleFinish(ctx: Context, next: NextFunction) {
       }
     );
 
-    const { status: status2 } = await supabase
-      .from("identities")
-      .upsert(
-        {
-          real_name: golestanPayload.name,
-          academic_orientation: golestanPayload.academicOrientation,
-        },
-        {
-          onConflict: "user_id",
-        }
-      )
-      .select();
+    await supabase.from("identities").upsert(
+      {
+        real_name: golestanPayload.name,
+        academic_orientation: golestanPayload.academicOrientation,
+      },
+      {
+        onConflict: "user_id",
+      }
+    );
 
-    if (status1 === 201 && status2 === 201) {
+    if (status1 === 201) {
       response = "برنامه با موفقیت بروزرسانی شد";
     } else {
       response = "مشکلی در سمت دیتابیس بوجود اومده";

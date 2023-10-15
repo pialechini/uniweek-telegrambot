@@ -51,7 +51,6 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     );
     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
-    cache.del(`user${ctx.from?.id}`);
 
     await signIn(ctx.from?.id!);
 
@@ -68,12 +67,15 @@ async function handleFinish(ctx: Context, next: NextFunction) {
 
     if (status === 201) {
       ctx.reply("برنامه با موفقیت بروزرسانی شد");
+      cache.del(`user${ctx.from?.id}`);
       return;
     }
 
     ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
+    cache.del(`user${ctx.from?.id}`);
   } catch (error) {
     ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
+    cache.del(`user${ctx.from?.id}`);
     return;
   }
 }

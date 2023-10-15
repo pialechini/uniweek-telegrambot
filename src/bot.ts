@@ -1,7 +1,6 @@
 import * as express from "express";
 import bot from "./create-bot";
 import { webhookCallback } from "grammy";
-import "./lib/cache";
 import "./commands";
 import "./features/week-schedule";
 

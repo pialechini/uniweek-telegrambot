@@ -12,7 +12,7 @@ export class CacheContext<T> {
   }
 
   retreive(key: string | number) {
-    return cacheDriver.get(key) as T | undefined;
+    return cacheDriver.get(this.scope + key) as T | undefined;
   }
 
   forget(key: string | number) {

@@ -11,6 +11,10 @@ bot.api.setMyCommands([
   { command: "help", description: "راهنمای جامع" },
 ]);
 
+bot.command("start", async (ctx) => {
+  ctx.reply("you send start command");
+});
+
 // Start the server
 if (process.env.NODE_ENV === "production") {
   // Use Webhooks for the production server

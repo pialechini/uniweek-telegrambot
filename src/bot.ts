@@ -1,7 +1,8 @@
 import * as express from "express";
 import bot from "./create-bot";
 import { webhookCallback } from "grammy";
-import "./commands";
+import "./features/bot-start";
+import "./features/help";
 import "./features/week-schedule";
 
 bot.api.setMyCommands([

@@ -1,6 +1,6 @@
 import { CommandContext, Context } from "grammy";
-import bot from "./create-bot";
-import { singUp } from "./features/auth/auth";
+import bot from "../create-bot";
+import { singUp } from "../features/auth/auth";
 
 bot.command("start", async (ctx: CommandContext<Context>) => {
   ctx.reply(ctx.message?.text!);

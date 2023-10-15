@@ -23,8 +23,6 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
 }
 
 async function handleFinish(ctx: Context, next: NextFunction) {
-  console.log(cache.retreive(ctx.from?.id!));
-
   const golestanEncodedString = cache.retreive(ctx.chat?.id!);
 
   if (ctx.message?.text !== "ارسال" || golestanEncodedString === undefined) {
@@ -71,8 +69,6 @@ async function handleFinish(ctx: Context, next: NextFunction) {
 }
 
 async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
-  console.log(cache.retreive(ctx.from?.id!));
-
   const golestanEncodedString = cache.retreive(ctx.from?.id!);
 
   if (golestanEncodedString === undefined) {

@@ -5,7 +5,11 @@ import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
 import { signIn } from "../auth/auth";
-import cache from "../../cache";
+import { CacheFor } from "@/lib/cache";
+
+const { remember, retreive, forget } = new CacheFor<string>(
+  "golestanEncodedString"
+);
 
 async function handleSetCommand(ctx: CommandContext<Context>) {
   await ctx.reply(
@@ -17,27 +21,24 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
     }
   );
 
-  cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 0);
+  remember(ctx.from?.id!, "");
 }
 
 async function handleFinish(ctx: Context, next: NextFunction) {
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
-  console.log(`in handleFinish(): payload=${payload}`);
+  const golestanEncodedString = retreive(ctx.chat?.id!);
 
-  if (
-    ctx.message?.text !== "ارسال" ||
-    payload?.golestanEncodedString === undefined
-  ) {
+  if (ctx.message?.text !== "ارسال" || golestanEncodedString === undefined) {
     await next();
     return;
   }
 
   try {
     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
-      payload.golestanEncodedString
+      golestanEncodedString
     );
     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
+    forget(ctx.from?.id!);
 
     await signIn(ctx.from?.id!);
 
@@ -54,31 +55,27 @@ async function handleFinish(ctx: Context, next: NextFunction) {
 
     if (status === 201) {
       ctx.reply("برنامه با موفقیت بروزرسانی شد");
-      cache.del(`user${ctx.from?.id}`);
+
+      forget(ctx.from?.id!);
       return;
     }
 
     ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
-    cache.del(`user${ctx.from?.id}`);
   } catch (error) {
     ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
-    cache.del(`user${ctx.from?.id}`);
     return;
   }
 }
 
 async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
-  console.log(`in handleGolestanEncodedString(): payload=${payload}`);
+  const golestanEncodedString = retreive(ctx.from?.id!);
 
-  if (payload?.golestanEncodedString === undefined) {
+  if (golestanEncodedString === undefined) {
     await next();
     return;
   }
 
-  cache.set(`user${ctx.from?.id}`, {
-    golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
-  });
+  remember(ctx.from?.id!, golestanEncodedString + ctx.message?.text);
 }
 
 bot.command("set", handleSetCommand);

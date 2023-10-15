@@ -14,7 +14,7 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
     `توکن بدست آمده از گلستان رو برام ارسال کنین و در نهایت دکمه ارسال رو بزنین
     <b>توجه: امکان داره به علت طولانی بودن توکن در قالب چند پیام ارسال بشه</b>`,
     {
-      reply_markup: new Keyboard().text("ارسال"),
+      reply_markup: new Keyboard().text("ارسال").resized(),
       parse_mode: "HTML",
     }
   );
@@ -31,6 +31,8 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     await next();
     return;
   }
+
+  let response = "";
 
   try {
     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
@@ -54,16 +56,17 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     );
 
     if (status === 201) {
-      ctx.reply("برنامه با موفقیت بروزرسانی شد");
-
-      cache.forget(ctx.from?.id!);
-      return;
+      response = "برنامه با موفقیت بروزرسانی شد";
+    } else {
+      response = "مشکلی در سمت دیتابیس بوجود اومده";
     }
-
-    ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
   } catch (error) {
-    ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
-    return;
+    response = "مشکلی در پردازش رشته گلستان پیش اومده";
+  } finally {
+    cache.forget(ctx.from?.id!);
+    ctx.reply(response, {
+      reply_markup: { remove_keyboard: true },
+    });
   }
 }
 

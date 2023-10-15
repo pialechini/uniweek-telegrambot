@@ -5,7 +5,7 @@ import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
 import { signIn } from "../auth/auth";
-import { CacheFor } from "@/lib/cache";
+import { CacheFor } from "../../lib/cache";
 
 const { remember, retreive, forget } = new CacheFor<string>(
   "golestanEncodedString"

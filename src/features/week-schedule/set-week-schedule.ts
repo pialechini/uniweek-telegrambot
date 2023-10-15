@@ -1,29 +1,11 @@
 import bot from "../../create-bot";
 import { decode } from "../../lib/json-utils";
-import {
-  CommandContext,
-  Context,
-  Keyboard,
-  NextFunction,
-  session,
-} from "grammy";
+import { CommandContext, Context, Keyboard, NextFunction } from "grammy";
 import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
 import { signIn } from "../auth/auth";
 import cache from "../../cache";
-
-// async function fetchOperationMode(senderId: number) {
-//   const user = await signIn(senderId);
-
-//   const { data, error } = await supabase
-//     .from("operation_mode")
-//     .select("status")
-//     .eq("user_id", user?.id)
-//     .single();
-
-//   return data?.status as types.OperationMode;
-// }
 
 async function handleSetCommand(ctx: CommandContext<Context>) {
   await ctx.reply(
@@ -47,8 +29,6 @@ async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
     return;
   }
 
-  console.log(`cache payload: ${payload.golestanEncodedString}`);
-
   cache.set(`user${ctx.from?.id}`, {
     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
   });
@@ -71,6 +51,7 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     );
     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
+    cache.del(`user${ctx.from?.id}`);
 
     await signIn(ctx.from?.id!);
 

@@ -5,11 +5,9 @@ import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
 import { signIn } from "../auth/auth";
-import { CacheFor } from "../../lib/cache";
+import { CacheContext } from "../../lib/cache";
 
-const { remember, retreive, forget } = new CacheFor<string>(
-  "golestanEncodedString"
-);
+const cache = new CacheContext<string>("golestanEncodedString");
 
 async function handleSetCommand(ctx: CommandContext<Context>) {
   await ctx.reply(
@@ -21,11 +19,11 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
     }
   );
 
-  remember(ctx.from?.id!, "");
+  cache.remember(ctx.from?.id!, "");
 }
 
 async function handleFinish(ctx: Context, next: NextFunction) {
-  const golestanEncodedString = retreive(ctx.chat?.id!);
+  const golestanEncodedString = cache.retreive(ctx.chat?.id!);
 
   if (ctx.message?.text !== "ارسال" || golestanEncodedString === undefined) {
     await next();
@@ -38,7 +36,7 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     );
     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
-    forget(ctx.from?.id!);
+    cache.forget(ctx.from?.id!);
 
     await signIn(ctx.from?.id!);
 
@@ -56,7 +54,7 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     if (status === 201) {
       ctx.reply("برنامه با موفقیت بروزرسانی شد");
 
-      forget(ctx.from?.id!);
+      cache.forget(ctx.from?.id!);
       return;
     }
 
@@ -68,14 +66,14 @@ async function handleFinish(ctx: Context, next: NextFunction) {
 }
 
 async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
-  const golestanEncodedString = retreive(ctx.from?.id!);
+  const golestanEncodedString = cache.retreive(ctx.from?.id!);
 
   if (golestanEncodedString === undefined) {
     await next();
     return;
   }
 
-  remember(ctx.from?.id!, golestanEncodedString + ctx.message?.text);
+  cache.remember(ctx.from?.id!, golestanEncodedString + ctx.message?.text);
 }
 
 bot.command("set", handleSetCommand);

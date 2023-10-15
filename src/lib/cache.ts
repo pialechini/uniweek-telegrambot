@@ -2,7 +2,7 @@ import NodeCache from "node-cache";
 
 const cacheDriver = new NodeCache();
 
-export class CacheFor<T> {
+export class CacheContext<T> {
   constructor(public scope: string) {
     this.scope = scope;
   }

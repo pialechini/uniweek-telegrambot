@@ -20,21 +20,9 @@ export async function signIn(senderId: number) {
 }
 
 export async function singUp(senderId: number, username?: string) {
-  const { data: signupResult } = await supabase.auth.signUp({
+  const { data } = await supabase.auth.signUp({
     ...makeCredentialsWith(senderId),
   });
 
-  const { data, status } = await supabase
-    .from("identities")
-    .upsert(
-      { telegram_username: username },
-      {
-        onConflict: "user_id",
-      }
-    )
-    .select();
-
-  console.log(JSON.stringify(signupResult), data, status);
-
-  return signupResult.user;
+  return data.user;
 }

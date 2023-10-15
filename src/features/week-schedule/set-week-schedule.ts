@@ -1,6 +1,12 @@
 import bot from "../../create-bot";
 import { decode } from "../../lib/json-utils";
-import { CommandContext, Context, Keyboard, session } from "grammy";
+import {
+  CommandContext,
+  Context,
+  Keyboard,
+  NextFunction,
+  session,
+} from "grammy";
 import sampleGolestanSchedule from "./sample-golestan-schedule";
 import { constructWeekSchedule } from "../../lib/golestan";
 import supabase from "../../lib/supabase";
@@ -34,7 +40,7 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 30);
 }
 
-async function handleGolestanEncodedString(ctx: Context, next: any) {
+async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
   // const operation_mode = await fetchOperationMode(ctx.from?.id!);
 
   // if (
@@ -46,6 +52,7 @@ async function handleGolestanEncodedString(ctx: Context, next: any) {
   ctx.reply("msg event");
 
   if (!payload?.golestanEncodedString) {
+    await next();
     return;
   }
 
@@ -54,49 +61,48 @@ async function handleGolestanEncodedString(ctx: Context, next: any) {
   cache.set(`user${ctx.from?.id}`, {
     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
   });
-
-  await next();
 }
 
-// async function handleFinish(ctx: Context) {
-//   const payload = cache.get(`user${ctx.from?.id}`) as any;
+async function handleFinish(ctx: Context, next: NextFunction) {
+  const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-//   if (!payload?.golestanEncodedString) {
-//     return;
-//   }
+  if (!payload?.golestanEncodedString) {
+    await next();
+    return;
+  }
 
-//   try {
-//     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
-//       payload.golestanEncodedString
-//     );
-//     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
-//     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
+  try {
+    const golestanSchedule = decode<typeof sampleGolestanSchedule>(
+      payload.golestanEncodedString
+    );
+    const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
+    const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
 
-//     await signIn(ctx.from?.id!);
+    await signIn(ctx.from?.id!);
 
-//     // Update or insert week schedules to database
-//     const { status, data, error } = await supabase.from("week_schedule").upsert(
-//       {
-//         even_week_schedule: JSON.stringify(evenWeekSchedule),
-//         odd_week_schedule: JSON.stringify(oddWeekSchedule),
-//       },
-//       {
-//         onConflict: "user_id",
-//       }
-//     );
+    // Update or insert week schedules to database
+    const { status, data, error } = await supabase.from("week_schedule").upsert(
+      {
+        even_week_schedule: JSON.stringify(evenWeekSchedule),
+        odd_week_schedule: JSON.stringify(oddWeekSchedule),
+      },
+      {
+        onConflict: "user_id",
+      }
+    );
 
-//     if (status === 201) {
-//       ctx.reply("برنامه با موفقیت بروزرسانی شد");
-//       return;
-//     }
+    if (status === 201) {
+      ctx.reply("برنامه با موفقیت بروزرسانی شد");
+      return;
+    }
 
-//     ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
-//   } catch (error) {
-//     ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
-//     return;
-//   }
-// }
+    ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
+  } catch (error) {
+    ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
+    return;
+  }
+}
 
 bot.command("set", handleSetCommand);
-bot.on("msg", handleGolestanEncodedString);
-// bot.on("message:text", handleFinish);
+bot.on("message:text", handleGolestanEncodedString);
+bot.on("message:text", handleFinish);

@@ -1,19 +1,9 @@
 import * as express from "express";
 import bot from "./create-bot";
-import { CommandContext, Context, webhookCallback } from "grammy";
-// import "./features/week-schedule";
+import { webhookCallback } from "grammy";
 import "./commands";
 import "./cache";
-import { singUp } from "./features/auth/auth";
-
-bot.on("message:text", async (ctx, next) => {
-  ctx.reply("handler1");
-  await next();
-});
-
-bot.on("message:text", async (ctx) => {
-  ctx.reply("handler2");
-});
+import "./features/week-schedule";
 
 bot.api.setMyCommands([
   { command: "week", description: "برنامه هفتگی" },

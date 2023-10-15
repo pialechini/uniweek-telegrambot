@@ -43,6 +43,7 @@ async function handleGolestanEncodedString(ctx: Context) {
   // }
 
   const payload = cache.get(`user${ctx.from?.id}`) as any;
+  ctx.reply("msg event");
 
   if (!payload?.golestanEncodedString) {
     return;
@@ -95,5 +96,5 @@ async function handleGolestanEncodedString(ctx: Context) {
 // }
 
 bot.command("set", handleSetCommand);
-bot.on("message", handleGolestanEncodedString);
+bot.on("msg", handleGolestanEncodedString);
 // bot.on("message:text", handleFinish);

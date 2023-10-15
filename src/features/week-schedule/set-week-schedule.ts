@@ -34,64 +34,64 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 30);
 }
 
-async function handleGolestanEncodedString(ctx: Context) {
-  // const operation_mode = await fetchOperationMode(ctx.from?.id!);
+// async function handleGolestanEncodedString(ctx: Context) {
+//   // const operation_mode = await fetchOperationMode(ctx.from?.id!);
 
-  // if (
-  // operation_mode.state === "waiting for golestan encoded string from user"
-  // ) {
-  // }
+//   // if (
+//   // operation_mode.state === "waiting for golestan encoded string from user"
+//   // ) {
+//   // }
 
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
+//   const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-  if (!payload?.golestanEncodedString) {
-    return;
-  }
+//   if (!payload?.golestanEncodedString) {
+//     return;
+//   }
 
-  cache.set(`user${ctx.from?.id}`, {
-    golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
-  });
-}
+//   cache.set(`user${ctx.from?.id}`, {
+//     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
+//   });
+// }
 
-async function handleFinish(ctx: Context) {
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
+// async function handleFinish(ctx: Context) {
+//   const payload = cache.get(`user${ctx.from?.id}`) as any;
 
-  if (!payload?.golestanEncodedString) {
-    return;
-  }
+//   if (!payload?.golestanEncodedString) {
+//     return;
+//   }
 
-  try {
-    const golestanSchedule = decode<typeof sampleGolestanSchedule>(
-      payload.golestanEncodedString
-    );
-    const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
-    const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
+//   try {
+//     const golestanSchedule = decode<typeof sampleGolestanSchedule>(
+//       payload.golestanEncodedString
+//     );
+//     const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
+//     const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
 
-    await signIn(ctx.from?.id!);
+//     await signIn(ctx.from?.id!);
 
-    // Update or insert week schedules to database
-    const { status, data, error } = await supabase.from("week_schedule").upsert(
-      {
-        even_week_schedule: JSON.stringify(evenWeekSchedule),
-        odd_week_schedule: JSON.stringify(oddWeekSchedule),
-      },
-      {
-        onConflict: "user_id",
-      }
-    );
+//     // Update or insert week schedules to database
+//     const { status, data, error } = await supabase.from("week_schedule").upsert(
+//       {
+//         even_week_schedule: JSON.stringify(evenWeekSchedule),
+//         odd_week_schedule: JSON.stringify(oddWeekSchedule),
+//       },
+//       {
+//         onConflict: "user_id",
+//       }
+//     );
 
-    if (status === 201) {
-      ctx.reply("برنامه با موفقیت بروزرسانی شد");
-      return;
-    }
+//     if (status === 201) {
+//       ctx.reply("برنامه با موفقیت بروزرسانی شد");
+//       return;
+//     }
 
-    ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
-  } catch (error) {
-    ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
-    return;
-  }
-}
+//     ctx.reply("مشکلی در سمت دیتابیس بوجود اومده");
+//   } catch (error) {
+//     ctx.reply("مشکلی در پردازش رشته گلستان پیش اومده");
+//     return;
+//   }
+// }
 
 bot.command("set", handleSetCommand);
-bot.on("message:text", handleGolestanEncodedString);
-bot.on("message:text", handleFinish);
+// bot.on("message:text", handleGolestanEncodedString);
+// bot.on("message:text", handleFinish);

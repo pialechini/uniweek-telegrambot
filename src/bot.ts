@@ -1,7 +1,7 @@
 import * as express from "express";
 import bot from "./create-bot";
 import { CommandContext, Context, webhookCallback } from "grammy";
-import "./features/week-schedule";
+// import "./features/week-schedule";
 import "./commands";
 import "./cache";
 import { singUp } from "./features/auth/auth";

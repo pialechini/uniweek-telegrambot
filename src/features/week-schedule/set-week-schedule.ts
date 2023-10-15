@@ -95,4 +95,4 @@ async function handleFinish(ctx: Context) {
 
 bot.command("set", handleSetCommand);
 bot.on("message:text", handleGolestanEncodedString);
-bot.on("message:text", handleFinish);
+// bot.on("message:text", handleFinish);

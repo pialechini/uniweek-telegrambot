@@ -1,7 +1,7 @@
 import * as express from "express";
 import bot from "./create-bot";
 import { webhookCallback } from "grammy";
-// import "./features/week-schedule/index";
+import "./features/week-schedule/index";
 import "./commands";
 import "./cache";
 
@@ -10,10 +10,6 @@ bot.api.setMyCommands([
   { command: "set", description: "تنظیم برنامه هفتگی" },
   { command: "help", description: "راهنمای جامع" },
 ]);
-
-bot.command("start", async (ctx) => {
-  ctx.reply("you send start command");
-});
 
 // Start the server
 if (process.env.NODE_ENV === "production") {

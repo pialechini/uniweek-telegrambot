@@ -34,7 +34,7 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 30);
 }
 
-async function handleGolestanEncodedString(ctx: Context) {
+async function handleGolestanEncodedString(ctx: Context, next: any) {
   // const operation_mode = await fetchOperationMode(ctx.from?.id!);
 
   // if (
@@ -54,6 +54,8 @@ async function handleGolestanEncodedString(ctx: Context) {
   cache.set(`user${ctx.from?.id}`, {
     golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
   });
+
+  await next();
 }
 
 // async function handleFinish(ctx: Context) {

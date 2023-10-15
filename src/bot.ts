@@ -3,6 +3,7 @@ import bot from "./create-bot";
 import { webhookCallback } from "grammy";
 import "./features/week-schedule/index";
 import "./commands";
+import "./cache";
 
 bot.api.setMyCommands([
   { command: "week", description: "برنامه هفتگی" },

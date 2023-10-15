@@ -26,8 +26,6 @@ import cache from "../../cache";
 // }
 
 async function handleSetCommand(ctx: CommandContext<Context>) {
-  console.log(ctx.message?.text);
-
   await ctx.reply(
     `توکن بدست آمده از گلستان رو برام ارسال کنین و در نهایت دکمه ارسال رو بزنین
     <b>توجه: امکان داره به علت طولانی بودن توکن در قالب چند پیام ارسال بشه</b>`,
@@ -37,7 +35,7 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
     }
   );
 
-  cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 30);
+  cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 0);
 }
 
 async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
@@ -49,7 +47,7 @@ async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
   // }
 
   const payload = cache.get(`user${ctx.from?.id}`) as any;
-  ctx.reply("msg event");
+  console.log(payload);
 
   if (!payload?.golestanEncodedString) {
     await next();

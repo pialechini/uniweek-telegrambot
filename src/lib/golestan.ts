@@ -2,7 +2,7 @@ import sampleGolestanSchedule from "../features/week-schedule/sample-golestan-sc
 
 function initializeEmptyWeekSchedule(): WeekSchedule {
   return Array.from({ length: 5 }, () =>
-    Array(4).fill({ name: null, location: null }),
+    Array(4).fill({ name: null, location: null })
   );
 }
 
@@ -39,7 +39,7 @@ function formatClassLocation(location: string) {
 
 export function constructWeekSchedule(
   evenOdd: "even" | "odd",
-  golestanSchedule: typeof sampleGolestanSchedule,
+  golestanSchedule: typeof sampleGolestanSchedule.schedule
 ): WeekSchedule {
   const weekSchedule = initializeEmptyWeekSchedule();
 

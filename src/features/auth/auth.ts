@@ -1,5 +1,6 @@
 import supabase from "../../lib/supabase";
 import { sha256 } from "js-sha256";
+import * as types from "../../types/types";
 
 export function makeCredentialsWith(senderId: number) {
   const token = sha256(`wer3489${senderId}@..sf.s.cxv`);
@@ -10,28 +11,28 @@ export function makeCredentialsWith(senderId: number) {
   };
 }
 
-export async function signIn(senderId: number, username?: string) {
-  const { data, error } = await supabase.auth.signInWithPassword(
+export async function signIn(senderId: number) {
+  const { data } = await supabase.auth.signInWithPassword(
     makeCredentialsWith(senderId)
   );
-
-  // Invalid login credentials
-  if (error?.status === 400) {
-    return singUp(senderId, username);
-  }
 
   return data.user;
 }
 
 export async function singUp(senderId: number, username?: string) {
-  const { data } = await supabase.auth.signUp({
+  const { data: signupResult } = await supabase.auth.signUp({
     ...makeCredentialsWith(senderId),
-    options: {
-      data: {
-        telegram_username: username ?? "",
-      },
-    },
   });
 
-  return data.user;
+  const { data } = await supabase
+    .from("identities")
+    .upsert(
+      { telegram_username: username },
+      {
+        onConflict: "user_id",
+      }
+    )
+    .select();
+
+  return signupResult.user;
 }

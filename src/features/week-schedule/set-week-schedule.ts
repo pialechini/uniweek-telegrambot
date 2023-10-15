@@ -33,17 +33,22 @@ async function handleFinish(ctx: Context, next: NextFunction) {
   let response = "";
 
   try {
-    const golestanSchedule = decode<typeof sampleGolestanSchedule>(
+    const golestanPayload = decode<typeof sampleGolestanSchedule>(
       golestanEncodedString
     );
-    const evenWeekSchedule = constructWeekSchedule("even", golestanSchedule);
-    const oddWeekSchedule = constructWeekSchedule("odd", golestanSchedule);
+    const evenWeekSchedule = constructWeekSchedule(
+      "even",
+      golestanPayload.schedule
+    );
+    const oddWeekSchedule = constructWeekSchedule(
+      "odd",
+      golestanPayload.schedule
+    );
     cache.forget(ctx.from?.id!);
 
     await signIn(ctx.from?.id!);
 
-    // Update or insert week schedules to database
-    const { status, data, error } = await supabase.from("week_schedule").upsert(
+    const { status: status1 } = await supabase.from("week_schedule").upsert(
       {
         even_week_schedule: JSON.stringify(evenWeekSchedule),
         odd_week_schedule: JSON.stringify(oddWeekSchedule),
@@ -53,7 +58,20 @@ async function handleFinish(ctx: Context, next: NextFunction) {
       }
     );
 
-    if (status === 201) {
+    const { status: status2 } = await supabase
+      .from("identities")
+      .upsert(
+        {
+          real_name: golestanPayload.name,
+          academic_orientation: golestanPayload.academicOrientation,
+        },
+        {
+          onConflict: "user_id",
+        }
+      )
+      .select();
+
+    if (status1 === 201 && status2 === 201) {
       response = "برنامه با موفقیت بروزرسانی شد";
     } else {
       response = "مشکلی در سمت دیتابیس بوجود اومده";

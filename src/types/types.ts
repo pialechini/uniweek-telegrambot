@@ -1,8 +1,3 @@
-export type OperationMode = {
-  state: string;
-  payload?: object;
-} & object;
-
 export type Json =
   | string
   | number
@@ -14,27 +9,26 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      operation_mode: {
+      identities: {
         Row: {
-          status: Json;
+          academic_orientation: string | null;
+          real_name: string | null;
+          telegram_username: string | null;
           user_id: string;
         };
         Insert: {
-          status: Json;
-          user_id: string;
-        };
-        Update: {
-          status?: Json;
+          academic_orientation?: string | null;
+          real_name?: string | null;
+          telegram_username?: string | null;
           user_id?: string;
         };
-        Relationships: [
-          {
-            foreignKeyName: "operation_mode_user_id_fkey";
-            columns: ["user_id"];
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
+        Update: {
+          academic_orientation?: string | null;
+          real_name?: string | null;
+          telegram_username?: string | null;
+          user_id?: string;
+        };
+        Relationships: [];
       };
       week_schedule: {
         Row: {

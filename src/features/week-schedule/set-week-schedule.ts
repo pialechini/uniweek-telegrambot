@@ -24,7 +24,7 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   console.log(ctx.message?.text);
 
   await ctx.reply(
-    `توکن بدست آمده از گلستان رو برام ارسال کنین و در نهایت دکمه ارسال رو بزنین <br>
+    `توکن بدست آمده از گلستان رو برام ارسال کنین و در نهایت دکمه ارسال رو بزنین
     <b>توجه: امکان داره به علت طولانی بودن توکن در قالب چند پیام ارسال بشه</b>`,
     {
       reply_markup: new Keyboard().text("ارسال"),

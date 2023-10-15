@@ -2,7 +2,7 @@ import * as express from "express";
 import bot from "./create-bot";
 import { webhookCallback } from "grammy";
 import "./features/week-schedule/index";
-import "./commands";
+import "./commands.ts";
 import "./cache";
 
 bot.api.setMyCommands([

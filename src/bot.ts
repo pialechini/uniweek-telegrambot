@@ -6,8 +6,9 @@ import "./commands";
 import "./cache";
 import { singUp } from "./features/auth/auth";
 
-bot.on("message:text", async (ctx) => {
+bot.on("message:text", async (ctx, next) => {
   ctx.reply("handler1");
+  await next();
 });
 
 bot.on("message:text", async (ctx) => {

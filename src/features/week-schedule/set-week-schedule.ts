@@ -20,22 +20,9 @@ async function handleSetCommand(ctx: CommandContext<Context>) {
   cache.set(`user${ctx.from?.id}`, { golestanEncodedString: "" }, 0);
 }
 
-async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
-  const payload = cache.get(`user${ctx.from?.id}`) as any;
-  console.log(payload);
-
-  if (payload?.golestanEncodedString === undefined) {
-    await next();
-    return;
-  }
-
-  cache.set(`user${ctx.from?.id}`, {
-    golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
-  });
-}
-
 async function handleFinish(ctx: Context, next: NextFunction) {
   const payload = cache.get(`user${ctx.from?.id}`) as any;
+  console.log(`in handleFinish(): payload=${payload}`);
 
   if (
     ctx.message?.text !== "ارسال" ||
@@ -78,6 +65,20 @@ async function handleFinish(ctx: Context, next: NextFunction) {
     cache.del(`user${ctx.from?.id}`);
     return;
   }
+}
+
+async function handleGolestanEncodedString(ctx: Context, next: NextFunction) {
+  const payload = cache.get(`user${ctx.from?.id}`) as any;
+  console.log(`in handleGolestanEncodedString(): payload=${payload}`);
+
+  if (payload?.golestanEncodedString === undefined) {
+    await next();
+    return;
+  }
+
+  cache.set(`user${ctx.from?.id}`, {
+    golestanEncodedString: payload.golestanEncodedString + ctx.message?.text,
+  });
 }
 
 bot.command("set", handleSetCommand);

@@ -3,17 +3,17 @@ import bot from "./create-bot";
 import { CommandContext, Context, webhookCallback } from "grammy";
 import "./features/week-schedule/index";
 // import "./commands";
-import "./cache";
-import { singUp } from "./features/auth/auth";
+// import "./cache";
+// import { singUp } from "./features/auth/auth";
 
 bot.command("start", async (ctx: CommandContext<Context>) => {
   bot.api.sendMessage(ctx.chat.id, ctx.message?.text ?? "some text");
 
   console.log(ctx.message?.text);
 
-  if (ctx.from?.id != null) {
-    await singUp(ctx.from?.id, ctx.from?.username);
-  }
+  // if (ctx.from?.id != null) {
+  //   await singUp(ctx.from?.id, ctx.from?.username);
+  // }
 });
 
 bot.api.setMyCommands([

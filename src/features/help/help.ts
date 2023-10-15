@@ -1,4 +1,4 @@
-import bot from "@/create-bot";
+import bot from "../../create-bot";
 
 bot.command("help", async (ctx) => {
   ctx.reply(

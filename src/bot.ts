@@ -1,9 +1,10 @@
 import * as express from "express";
 import bot from "./create-bot";
-import { webhookCallback } from "grammy";
+import { CommandContext, Context, webhookCallback } from "grammy";
 import "./features/week-schedule/index";
 // import "./commands";
 import "./cache";
+import { singUp } from "./features/auth/auth";
 
 bot.command("start", async (ctx: CommandContext<Context>) => {
   bot.api.sendMessage(ctx.chat.id, ctx.message?.text ?? "some text");

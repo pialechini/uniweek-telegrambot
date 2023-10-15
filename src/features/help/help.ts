@@ -9,9 +9,7 @@ bot.command("help", async (ctx) => {
   );
 
   await ctx.reply(
-    `\`\`\`
-    const string=JSON.stringify([...[...document.querySelectorAll("iframe")].filter(e=>e.src.match(".*fid=.*;(88|78).*"))[0].contentDocument.querySelector("[name=Master]").contentDocument.querySelector("[name=Header]").contentWindow.Form_Body.contentWindow.Table3.children[0].children,].map(e=>[...e.children].map(e=>e.textContent)).map(e=>({name:e[1],teacher:e[3],days:[e[4],e[5],e[6],e[7],e[8]].map(e=>{if(""===e)return null;let t=e.substr(0,11),n=e.substr(11).trim(),r,o;return n.startsWith("ف ")?(o="odd",r=n.substr(2)):n.startsWith("ز ")?(o="even",r=n.substr(2)):(o=null,r=n),{location:r,time:t,evenOdd:o}})}))),codeUnits=new Uint16Array(string.length);for(let i=0;i<codeUnits.length;i++)codeUnits[i]=string.charCodeAt(i);console.log(btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer))));
-    \`\`\``,
+    `\`const string=JSON.stringify([...[...document.querySelectorAll("iframe")].filter(e=>e.src.match(".*fid=.*;(88|78).*"))[0].contentDocument.querySelector("[name=Master]").contentDocument.querySelector("[name=Header]").contentWindow.Form_Body.contentWindow.Table3.children[0].children,].map(e=>[...e.children].map(e=>e.textContent)).map(e=>({name:e[1],teacher:e[3],days:[e[4],e[5],e[6],e[7],e[8]].map(e=>{if(""===e)return null;let t=e.substr(0,11),n=e.substr(11).trim(),r,o;return n.startsWith("ف ")?(o="odd",r=n.substr(2)):n.startsWith("ز ")?(o="even",r=n.substr(2)):(o=null,r=n),{location:r,time:t,evenOdd:o}})}))),codeUnits=new Uint16Array(string.length);for(let i=0;i<codeUnits.length;i++)codeUnits[i]=string.charCodeAt(i);console.log(btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer))));\``,
     {
       parse_mode: "Markdown",
     }

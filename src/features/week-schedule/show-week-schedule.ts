@@ -6,7 +6,7 @@ import {
   InlineKeyboard,
 } from "grammy";
 import { encode } from "../../lib/json-utils";
-import { makeCredentialsWith, signIn } from "../auth/auth";
+import { makeCredentialsWith } from "../auth/auth";
 
 function constructCredentials(senderId: number) {
   return encode(makeCredentialsWith(senderId));

@@ -1,6 +1,6 @@
 import { CommandContext, Context } from "grammy";
 import bot from "../create-bot";
-import { signIn, singUp } from "../features/auth/auth";
+import { signIn, singUp } from "./auth/auth";
 import supabase from "../lib/supabase";
 
 bot.command("start", async (ctx: CommandContext<Context>) => {

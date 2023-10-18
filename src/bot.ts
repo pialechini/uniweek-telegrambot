@@ -1,8 +1,8 @@
-import * as express from "express";
+import app from "./create-app";
 import bot from "./create-bot";
 import { webhookCallback } from "grammy";
-import "./features/bot-start";
-import "./features/help/help";
+import "./features/command-start";
+import "./features/help";
 import "./features/week-schedule";
 
 bot.api.setMyCommands([
@@ -11,15 +11,12 @@ bot.api.setMyCommands([
   { command: "help", description: "راهنمای جامع" },
 ]);
 
-if (process.env.NODE_ENV === "production") {
-  const app = express.default();
-  app.use(express.json());
-  app.use(webhookCallback(bot, "express"));
+app.use(
+  "/bot6333079771:AAFqCU2vMP7s95JHfzej_vUQ9ScR59uuZHQ",
+  webhookCallback(bot, "express")
+);
 
-  const PORT = process.env.PORT || 3000;
-  app.listen(PORT, () => {
-    console.log(`Bot listening on port ${PORT}`);
-  });
-} else {
-  bot.start();
-}
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Bot listening on port ${PORT}`);
+});

@@ -8,7 +8,7 @@ export class CacheContext<T> {
   }
 
   remember(key: string | number, data: T) {
-    cacheDriver.set(`${this.scope}${key}`, data, 0);
+    cacheDriver.set(this.scope + key, data, 0);
   }
 
   retreive(key: string | number) {
@@ -16,6 +16,10 @@ export class CacheContext<T> {
   }
 
   forget(key: string | number) {
-    cacheDriver.del(`${this.scope}${key}`);
+    cacheDriver.del(this.scope + key);
+  }
+
+  has(key: string | number) {
+    return cacheDriver.has(this.scope + key);
   }
 }

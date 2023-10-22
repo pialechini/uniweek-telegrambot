@@ -17,9 +17,5 @@ bot.command("start", async (ctx: CommandContext<Context>) => {
     )
     .select();
 
-  if (!user) {
-    ctx.reply("یک مشکل سمت دیتابیس داریم!");
-  } else {
-    await ctx.reply("به به! خوش آمدید");
-  }
+  await ctx.reply("به به! خوش آمدید");
 });

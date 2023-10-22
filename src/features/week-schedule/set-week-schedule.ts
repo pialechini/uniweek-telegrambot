@@ -7,7 +7,7 @@ import * as types from "../../types/types";
 
 const EXPIRE_TIME = 60;
 
-const pendingWeekSchedules = new CacheContext<types.WeekSchedules>(
+const pendingWeekSchedules = new CacheContext<PendingWeekSchedule>(
   "pendingWeekSchedules"
 );
 
@@ -18,14 +18,14 @@ function generateVerificationCode() {
 }
 
 app.use("/setWeekSchedule", (req, res) => {
-  const weekSchedules = req.body;
+  const data = req.body as PendingWeekSchedule;
   let verificationCode;
 
   do {
     verificationCode = generateVerificationCode();
   } while (pendingWeekSchedules.has(verificationCode));
 
-  pendingWeekSchedules.remember(verificationCode, weekSchedules);
+  pendingWeekSchedules.remember(verificationCode, data);
 
   res.send({
     verificationCode,
@@ -33,7 +33,6 @@ app.use("/setWeekSchedule", (req, res) => {
   });
 });
 
-// ok
 bot.on("message", async (ctx) => {
   const verificationCode = ctx.message.text!;
 
@@ -45,9 +44,8 @@ bot.on("message", async (ctx) => {
   }
 
   const message = await ctx.reply("درحال ثبت برنامه");
-  bot.api.sendChatAction(ctx.chat.id, "upload_document");
 
-  const { evenWeekSchedule, oddWeekSchedule } =
+  const { evenWeekSchedule, oddWeekSchedule, identity } =
     pendingWeekSchedules.retreive(verificationCode)!;
 
   let response = "";
@@ -67,8 +65,9 @@ bot.on("message", async (ctx) => {
 
     await supabase.from("identities").upsert(
       {
-        real_name: "name",
-        academic_orientation: "academicOrientation",
+        real_name: identity.studentName,
+        academic_orientation: identity.academicOrientation,
+        student_number: identity.studentNumber,
       },
       {
         onConflict: "user_id",
@@ -81,9 +80,16 @@ bot.on("message", async (ctx) => {
       response = "مشکلی در سمت دیتابیس بوجود اومده";
     }
   } catch (error) {
+    console.log(error);
     response = "مشکلی در پردازش رشته گلستان پیش اومده";
   } finally {
     pendingWeekSchedules.forget(verificationCode);
     bot.api.editMessageText(ctx.chat.id, message.message_id, response);
   }
 });
+
+interface PendingWeekSchedule {
+  evenWeekSchedule: types.WeekSchedules;
+  oddWeekSchedule: types.WeekSchedules;
+  identity: types.StudentIdentity;
+}

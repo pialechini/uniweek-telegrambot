@@ -85,3 +85,9 @@ export interface WeekSchedules {
   evenWeekSchedule: WeekSchedule;
   oddWeekSchedule: WeekSchedule;
 }
+
+export interface StudentIdentity {
+  studentName: string;
+  studentNumber: string;
+  academicOrientation: string;
+}

@@ -10,16 +10,16 @@ bot.command("start", async (ctx: CommandContext<Context>) => {
   const { data, status } = await supabase
     .from("identities")
     .upsert(
-      { telegram_username: ctx.from?.username },
+      { telegram_username: ctx.from?.username, chat_id: ctx.from?.id },
       {
         onConflict: "user_id",
       }
     )
     .select();
 
-  if (user) {
-    ctx.reply("ساخت حساب کاربری موفقیت آمیز بود");
+  if (!user) {
+    ctx.reply("یک مشکل سمت دیتابیس داریم!");
+  } else {
+    await ctx.reply("به به! خوش آمدید");
   }
-
-  await ctx.reply("به به! خوش آمدید");
 });

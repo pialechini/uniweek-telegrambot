@@ -73,3 +73,15 @@ export interface Database {
     };
   };
 }
+
+export interface UniClass {
+  name: string;
+  location: string;
+}
+
+export type DaySchedule = Array<UniClass | null>;
+export type WeekSchedule = DaySchedule[];
+export interface WeekSchedules {
+  evenWeekSchedule: WeekSchedule;
+  oddWeekSchedule: WeekSchedule;
+}

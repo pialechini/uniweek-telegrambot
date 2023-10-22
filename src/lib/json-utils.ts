@@ -1,8 +1,7 @@
 export function decode<T extends object>(encoded: string): T {
-  const binary = atob(encoded);
-  const bytes = new Uint8Array(binary.length);
+  const bytes = new Uint8Array(encoded.length);
   for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
+    bytes[i] = encoded.charCodeAt(i);
   }
   const string = String.fromCharCode(...new Uint16Array(bytes.buffer));
   return JSON.parse(string);
@@ -14,5 +13,5 @@ export function encode(obj: object): string {
   for (let i = 0; i < codeUnits.length; i++) {
     codeUnits[i] = string.charCodeAt(i);
   }
-  return btoa(String.fromCharCode(...new Uint8Array(codeUnits.buffer)));
+  return String.fromCharCode(...new Uint8Array(codeUnits.buffer));
 }

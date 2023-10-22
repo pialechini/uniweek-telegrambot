@@ -5,6 +5,8 @@ import { CacheContext } from "../../lib/cache";
 import app from "../../create-app";
 import * as types from "../../types/types";
 
+const EXPIRE_TIME = 60;
+
 const pendingWeekSchedules = new CacheContext<types.WeekSchedules>(
   "pendingWeekSchedules"
 );
@@ -25,13 +27,20 @@ app.use("/setWeekSchedule", (req, res) => {
 
   pendingWeekSchedules.remember(verificationCode, weekSchedules);
 
-  res.send(verificationCode);
+  res.send({
+    verificationCode,
+    expire: EXPIRE_TIME,
+  });
 });
 
+// ok
 bot.on("message", async (ctx) => {
   const verificationCode = ctx.message.text!;
 
-  if (!/\d{4}/.test(verificationCode)) {
+  if (
+    !/\d{4}/.test(verificationCode) ||
+    pendingWeekSchedules.retreive(verificationCode) === undefined
+  ) {
     return;
   }
 

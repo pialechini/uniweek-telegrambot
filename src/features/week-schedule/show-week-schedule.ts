@@ -5,11 +5,10 @@ import {
   Context,
   InlineKeyboard,
 } from "grammy";
-import { encode } from "../../lib/json-utils";
 import { makeCredentialsWith } from "../auth/auth";
 
 function constructCredentials(senderId: number) {
-  return encode(makeCredentialsWith(senderId));
+  return encodeURIComponent(JSON.stringify(makeCredentialsWith(senderId)));
 }
 
 function constructMiniAppLink(senderId: number) {

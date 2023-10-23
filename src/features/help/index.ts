@@ -1,1 +1,1 @@
-import "./help";
+import "./help-setting-week-schedule";

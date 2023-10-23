@@ -7,7 +7,6 @@ import "./features/week-schedule";
 
 bot.api.setMyCommands([
   { command: "week", description: "برنامه هفتگی" },
-  { command: "set", description: "تنظیم برنامه هفتگی" },
   { command: "help", description: "راهنمای جامع" },
 ]);
 

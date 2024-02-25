@@ -4,18 +4,23 @@ import { webhookCallback } from "grammy";
 import "./features/command-start";
 import "./features/help";
 import "./features/week-schedule";
+import * as process from "process";
 
 bot.api.setMyCommands([
   { command: "week", description: "برنامه هفتگی" },
   { command: "help", description: "راهنمای جامع" },
 ]);
 
-app.use(
-  "/bot6333079771:AAFqCU2vMP7s95JHfzej_vUQ9ScR59uuZHQ",
-  webhookCallback(bot, "express")
-);
+if (process.env.NODE_ENV === 'development') {
+  bot.start();
+} else {
+  app.use(
+      "/bot6333079771:AAFqCU2vMP7s95JHfzej_vUQ9ScR59uuZHQ",
+      webhookCallback(bot, "express")
+  );
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Bot listening on port ${PORT}`);
-});
+  const PORT = process.env.PORT || 3000;
+  app.listen(PORT, () => {
+    console.log(`Bot listening on port ${PORT}`);
+  });
+}

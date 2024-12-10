@@ -1,6 +1,7 @@
 {
 	"scripts": {
-		"dev": "npx tsc && npx tsc-alias && node dist/server.js"
+		"dev": "npx tsc && npx tsc-alias && node dist/server.js",
+		"build": "npx tsc && npx tsc-alias"
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.47.3",

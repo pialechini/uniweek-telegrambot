@@ -1,5 +1,5 @@
 import { tokenToEmail } from '@/helpers';
-import { db } from '@/providers';
+import createSupabaseClient from '@/services/supabase';
 import type { Identity, Schedule, WeekSchedule } from '@/types';
 
 const defaultWeekScheduleUponRegister: WeekSchedule = {
@@ -10,8 +10,9 @@ const defaultWeekScheduleUponRegister: WeekSchedule = {
 async function createUser(telegramId: number) {
   const token = crypto.randomUUID();
   const email = tokenToEmail(token);
+  const supabase = createSupabaseClient();
 
-  const { data, error: signupError } = await db.auth.signUp({
+  const { data, error: signupError } = await supabase.auth.signUp({
     email,
     password: email,
   });
@@ -27,7 +28,7 @@ async function createUser(telegramId: number) {
     token,
   };
 
-  const { error: identityCreationError } = await db
+  const { error: identityCreationError } = await supabase
     .from('identities')
     .insert(identity);
 
@@ -39,10 +40,11 @@ async function createUser(telegramId: number) {
     return;
   }
 
-  const { error: defaultWeekScheduleCreationError } = await db
+  const { error: defaultWeekScheduleCreationError } = await supabase
     .from('week_schedules')
     .insert({
       token,
+      user_id: data.user!.id,
       week_schedule: defaultWeekScheduleUponRegister,
     });
 
@@ -58,14 +60,16 @@ async function createUser(telegramId: number) {
 }
 
 async function findIdentity(telegramId: number) {
-  const { data, error } = await db
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
     .from('identities')
     .select('*')
     .eq('telegram_id', telegramId)
     .single();
 
   if (!data) {
-    console.error(error);
+    console.trace(error);
     return;
   }
 

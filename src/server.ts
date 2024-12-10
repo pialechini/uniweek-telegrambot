@@ -1,13 +1,5 @@
 import { WebError } from '@/error';
-import {
-  bot,
-  env,
-  router,
-  setupBot,
-  setupDb,
-  setupEnv,
-  setupRouter,
-} from '@/providers';
+import { bot, env, router, setupBot, setupEnv, setupRouter } from '@/providers';
 import express from 'express';
 import type { Express } from 'express';
 import { webhookCallback } from 'grammy';
@@ -69,7 +61,6 @@ function runInProductionMode(app: Express) {
 
 setupEnv();
 setupBot();
-setupDb();
 setupRouter();
 
 const app = prepareApp();

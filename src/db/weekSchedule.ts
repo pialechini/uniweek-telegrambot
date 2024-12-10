@@ -1,10 +1,12 @@
 import errors from '@/bot/errors';
 import { WebError } from '@/error';
-import { db } from '@/providers';
+import createSupabaseClient from '@/services/supabase';
 import { Schedule, WeekSchedule } from '@/types';
 
 async function fetchWeekSchedule(token: string) {
-  const { data, error } = await db
+  const supabase = createSupabaseClient();
+
+  const { data, error } = await supabase
     .from('week_schedules')
     .select('week_schedule')
     .eq('token', token)
@@ -22,16 +24,17 @@ async function updateWeekSchedule(
   even_weeks_schedule: Schedule,
   odd_weeks_schedule: Schedule,
 ) {
-  const { error } = await db.from('week_schedules').upsert(
-    {
-      token,
+  const supabase = createSupabaseClient();
+
+  const { error } = await supabase
+    .from('week_schedules')
+    .update({
       week_schedule: {
         even_weeks_schedule,
         odd_weeks_schedule,
       },
-    },
-    { onConflict: 'token' },
-  );
+    })
+    .eq('token', token);
 
   if (error) {
     throw new WebError(500, errors.database.general);

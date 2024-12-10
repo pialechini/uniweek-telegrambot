@@ -1,4 +1,4 @@
-import { WeekSchedule } from "@/types";
+import { WeekSchedule } from '@/types';
 
 // Supabase Exported TS File
 /* -------------------------------------------------------------------------- */
@@ -58,22 +58,25 @@ export type Database = {
       };
       week_schedules: {
         Row: {
-          token: string;
+          token: string | null;
+          user_id: string;
           week_schedule: WeekSchedule | null;
         };
         Insert: {
-          token: string;
+          token?: string | null;
+          user_id: string;
           week_schedule?: WeekSchedule | null;
         };
         Update: {
-          token?: string;
+          token?: string | null;
+          user_id?: string;
           week_schedule?: WeekSchedule | null;
         };
         Relationships: [
           {
             foreignKeyName: 'week_schedules_token_fkey';
             columns: ['token'];
-            isOneToOne: true;
+            isOneToOne: false;
             referencedRelation: 'identities';
             referencedColumns: ['token'];
           },

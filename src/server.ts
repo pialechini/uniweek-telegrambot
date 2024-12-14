@@ -1,5 +1,6 @@
 import { WebError } from '@/error';
 import { bot, env, router, setupBot, setupEnv, setupRouter } from '@/providers';
+import cors from 'cors';
 import express from 'express';
 import type { Express } from 'express';
 import { webhookCallback } from 'grammy';
@@ -7,6 +8,13 @@ import { webhookCallback } from 'grammy';
 function prepareApp() {
   const app = express();
 
+  const corsOptions = {
+    origin: 'https://pialechini.github.io',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+    credentials: true, // cookies/authorization headers
+  };
+
+  app.use(cors(corsOptions));
   app.use(express.json());
   app.use(router);
 
@@ -21,18 +29,6 @@ function prepareApp() {
       error: {
         message: err.message || 'Internal Server Error',
         details: err.details || {},
-      },
-    });
-  });
-
-  // Default 404 handler
-  app.use((req, res) => {
-    res.status(404).json({
-      success: false,
-      status: 404,
-      error: {
-        message: 'Not Found',
-        details: {},
       },
     });
   });

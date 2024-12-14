@@ -1,10 +1,12 @@
 {
 	"scripts": {
 		"dev": "npx tsc && npx tsc-alias && node dist/server.js",
-		"build": "npx tsc && npx tsc-alias"
+		"build": "npx tsc && npx tsc-alias",
+		"start": "node dist/server.js"
 	},
 	"dependencies": {
 		"@supabase/supabase-js": "^2.47.3",
+		"cors": "^2.8.5",
 		"dotenv": "^16.4.7",
 		"express": "^4.21.2",
 		"express-async-handler": "^1.2.0",
@@ -14,6 +16,7 @@
 		"node-cache": "^5.1.2"
 	},
 	"devDependencies": {
+		"@chabokan.net/cli": "^0.8.9",
 		"@eslint/js": "^9.16.0",
 		"@trivago/prettier-plugin-sort-imports": "^5.2.0",
 		"@types/eslint__js": "^8.42.3",

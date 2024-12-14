@@ -5,7 +5,7 @@ export type Dict<T> = { [key: string]: T };
 
 export interface Env extends Dict<string | boolean | number | undefined> {
   TELEGRAM_TOKEN: string;
-  NODE_ENV: 'development' | 'production';
+  APP_ENV: 'development' | 'production';
   SUPABASE_KEY: string;
   SUPABASE_URL: string;
   PORT: number;

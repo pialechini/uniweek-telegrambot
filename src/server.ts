@@ -65,7 +65,7 @@ setupRouter();
 
 const app = prepareApp();
 
-if (env.NODE_ENV === 'development') {
+if (env.APP_ENV === 'development') {
   runInDevelopmentMode(app);
 } else {
   runInProductionMode(app);

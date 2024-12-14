@@ -24,7 +24,7 @@ function setupEnv() {
 
   // Check environment dependant envs according to
   // NODE_ENV wether is 'development' or 'production'
-  if (process.env.NODE_ENV === 'development') {
+  if (process.env.APP_ENV === 'development') {
     findMissingEnvs(REQUIRED_ENVS.development);
   } else {
     findMissingEnvs(REQUIRED_ENVS.production);
@@ -56,7 +56,7 @@ const CASTING_RULES: Dict<'number' | 'bool'> = {
 const REQUIRED_ENVS = {
   general: [
     'TELEGRAM_TOKEN',
-    'NODE_ENV',
+    'APP_ENV',
     'SUPABASE_KEY',
     'SUPABASE_URL',
     'PORT',

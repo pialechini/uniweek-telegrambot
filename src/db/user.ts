@@ -3,8 +3,8 @@ import createSupabaseClient from '@/services/supabase';
 import type { Identity, Schedule, WeekSchedule } from '@/types';
 
 const defaultWeekScheduleUponRegister: WeekSchedule = {
-  even_weeks_schedule: Array.from({ length: 5 }).fill([]) as Schedule,
-  odd_weeks_schedule: Array.from({ length: 5 }).fill([]) as Schedule,
+  even_weeks_schedule: Array.from({ length: 7 }).fill([]) as Schedule,
+  odd_weeks_schedule: Array.from({ length: 7 }).fill([]) as Schedule,
 };
 
 async function createUser(telegramId: number) {

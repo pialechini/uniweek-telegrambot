@@ -2,44 +2,78 @@ import { fetchWeekSchedule, updateWeekSchedule } from '@/db/weekSchedule';
 import { WebError } from '@/error';
 import { addSessionToSchedule } from '@/helpers';
 import type {
-  CreateKlassSessionRequestBody,
+  CreateKlassSessionResponse,
   DeleteKlassSessionRequestBody,
   Schedule,
   UpdateKlassSessionRequestBody,
   WeekScheduleRequest,
 } from '@/types';
+import validate from '@/validation/validate';
+import { createKlassSessionRequestBodySchema } from '@/validation/validationSchemas';
+import { difference, union } from 'lodash';
 
 async function createKlassSession(
-  req: WeekScheduleRequest<CreateKlassSessionRequestBody>,
+  req: WeekScheduleRequest<unknown>,
   res,
+  next,
 ) {
-  const { token } = req.params;
-  const { klass, time, location, day, even_odd } = req.body;
-  const session = { klass, time, location };
+  try {
+    const parsedBody = validate(createKlassSessionRequestBodySchema, req.body);
+    const { klass, time, location, days, even_odd } = parsedBody;
+    const session = { klass, time, location };
 
-  // Validation
-  if (!klass || !time || !location || day === undefined || !even_odd) {
-    throw new WebError(400, 'Missing required fields');
-  }
-
-  let { even_weeks_schedule, odd_weeks_schedule } =
-    await fetchWeekSchedule(token);
-
-  if (even_odd === 'even' || even_odd === 'both') {
-    even_weeks_schedule = addSessionToSchedule(
-      session,
-      day,
-      even_weeks_schedule,
+    // Fetch existing schedules
+    let { even_weeks_schedule, odd_weeks_schedule } = await fetchWeekSchedule(
+      req.params.token,
     );
+
+    const arrayOfDays = Array.isArray(days) ? days : [days];
+    let successfullyAddedDays: number[] = [];
+    let conflictingDays: number[] = [];
+
+    // Add session to all specified days
+    if (even_odd === 'even' || even_odd === 'both') {
+      const [updatedSchedule, daysWithConflict] = addSessionToSchedule(
+        session,
+        arrayOfDays,
+        even_weeks_schedule,
+      );
+
+      even_weeks_schedule = updatedSchedule;
+      conflictingDays = union(conflictingDays, daysWithConflict);
+    }
+
+    if (even_odd === 'odd' || even_odd === 'both') {
+      const [updatedSchedule, daysWithConflict] = addSessionToSchedule(
+        session,
+        days,
+        odd_weeks_schedule,
+      );
+
+      odd_weeks_schedule = updatedSchedule;
+      conflictingDays = union(conflictingDays, daysWithConflict);
+    }
+
+    successfullyAddedDays = difference(days, conflictingDays);
+
+    await updateWeekSchedule(
+      req.params.token,
+      even_weeks_schedule,
+      odd_weeks_schedule,
+    );
+
+    res.status(200).json({
+      success: true,
+      status: 200,
+      details: {
+        message: 'Session added successfully',
+        successfullyAddedDays,
+        conflictingDays,
+      },
+    } as CreateKlassSessionResponse);
+  } catch (err) {
+    next(err); // Pass errors to the global error handler
   }
-
-  if (even_odd === 'odd' || even_odd === 'both') {
-    odd_weeks_schedule = addSessionToSchedule(session, day, odd_weeks_schedule);
-  }
-
-  await updateWeekSchedule(token, even_weeks_schedule, odd_weeks_schedule);
-
-  res.status(201).json({ message: 'Session added successfully' });
 }
 
 async function updateKlassSession(

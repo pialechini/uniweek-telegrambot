@@ -60,9 +60,14 @@ export type WeekScheduleRequest<Body> = Request<
   Body
 >;
 
-export type CreateKlassSessionRequestBody = KlassSession & {
-  day: number;
-  even_odd: EvenOdd;
+export type CreateKlassSessionResponse = {
+  success: boolean;
+  status: number;
+  details: {
+    message: string;
+    successfullyAddedDays: number[];
+    conflictingDays: number[];
+  };
 };
 
 export type UpdateKlassSessionRequestBody = {

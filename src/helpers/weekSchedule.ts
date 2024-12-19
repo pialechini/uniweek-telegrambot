@@ -9,20 +9,24 @@ import { cloneDeep } from 'lodash';
 
 function addSessionToSchedule(
   session: KlassSession,
-  day: number,
+  days: number | number[],
   schedule: Schedule,
-) {
+): [Schedule, number[]] {
   const newSchedule = cloneDeep(schedule);
+  const daysArray = Array.isArray(days) ? days : [days];
+  const conflictingDays: number[] = [];
 
-  if (checkOverlapWithSchedule(session, schedule)) {
-    throw new Error('The session overlaps with an existing session.');
+  for (const day of daysArray) {
+    if (checkOverlapWithDaySchedule(session, schedule[day])) {
+      conflictingDays.push(day);
+      continue;
+    }
+
+    newSchedule[day].push(session);
+    newSchedule[day].sort((a, b) => a.time.localeCompare(b.time));
   }
 
-  newSchedule[day].push(session);
-
-  newSchedule[day].sort((a, b) => a.time.localeCompare(b.time));
-
-  return newSchedule;
+  return [newSchedule, conflictingDays];
 }
 
 function parseTime(time: string) {

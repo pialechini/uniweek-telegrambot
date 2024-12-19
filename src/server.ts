@@ -25,7 +25,7 @@ function prepareApp() {
 
     res.status(err.status || 500).json({
       success: false,
-      status: 500,
+      status: err.status || 500,
       error: {
         message: err.message || 'Internal Server Error',
         details: err.details || {},
